@@ -1,71 +1,310 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Late night T by mrd</title>
+<!DOCTYPE html>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Late Night MBTA and Taxi</title>
+    <link rel="stylesheet" href="onoff-switch.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="blueprint/screen.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="blueprint/print.css" type="text/css" media="print" />
+    <!--[if lt IE 8]><link rel="stylesheet" href="/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+    <link rel="stylesheet" href="blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="blueprint/plugins/buttons/screen.css" type="text/css" media="screen, projection" />
+
+    <style type="text/css">
+      a, a:visited, a:active { text-decoration: none; border-bottom: 1px dotted blue; }
+      a:hover { text-decoration: underline; border: none }
+      body { padding: 1em; text-align: justify }
+      //#clearbuttons button { display: none }
+      button.clearbutton { display: none }
+      //ul#clearbuttons { list-style-type: none; margin: 0; padding: 0; }
+      //ul#clearbuttons li { display: inline }
+      #explanation { overflow: scroll; height: 400px; padding: 2em }
+      #explanation ul { margin: 0; padding: 0; }
+      #discussion h3, #explanation h3 { color: #999999; font-size: 10pt; family:Trebuchet, Arial, sans-serif; font-weight: bold; }
+
+      table#display, table#display tr, table#display tr td { margin: 0; padding: 0; }
+
+      div#calendar_basic { width: 600px; height: 200px; }
+      div#chart_div { width: 650px; height: 400px; margin: 0; padding: 0 }
+      div#table_div { width: 400px; height: auto; }
+      div#summary_div { width: 400px; height: 3em; }
+      div#summary_div span.v { text-align: right; padding: 0; margin: 0 }
+      #mbtataxi { vertical-align: middle; }
+      #mbtataxi .label { display: inline-block; vertical-align: middle; margin-bottom: 2em; cursor: pointer; color: #999999; family: Trebuchet, Arial, sans-serif; font-weight: bold }
+
+      table#display tr:nth-child(even) td { background: transparent; }
+      table#display { }
+
+      #map_canvas { height: 300px; width: 400px }
+
+      .mySelectedTableRow td { background-color: #dadada }
+      .myTableRow td {background-color: white}
+
+      .waitmsg { font-family: Trebuchet, Arial, sans-serif; font-size: large; color: #666666 }
+    </style>
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1Xma3mRlBSyZBSuTJMURB-qJ5QP9k3Ho"></script>
+    <script type="text/javascript" src="moment.min.js"></script>
+    <script type="text/javascript" src="jquery.blockUI.js"></script>
+    <script type="text/javascript" src="ytydiff.js"></script>
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Late night T</h1>
-        <p>Late Night T Data Challenge</p>
 
-        <p class="view"><a href="https://github.com/mrd/LateNightT">View the Project on GitHub <small>mrd/LateNightT</small></a></p>
+    <div class="container">
+      <div class="span-8">
+        <div id="mbtataxi">
+          <div class="label">MBTA</div> <div class="onoffswitch">
+            <input type="checkbox" name="datasource" class="onoffswitch-checkbox" id="myonoffswitch">
+              <label class="onoffswitch-label" for="myonoffswitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </input>
+          </div> <div class="label">TAXI</div>
+        </div>
+      </div>
+      <div class="span-16 last">
+        <table id="display" border="0" cellspacing="0" cellpadding="0">
+        <tr><td><button class="clearbutton" id="clearday">X</button></td><td id="date_display"><span></span></td>
+        <td><button class="clearbutton" id="clear15m">X</button></td><td id="time_display"><span></span></td>
+        <td><button class="clearbutton" id="clearrs">X</button></td><td id="station_display"><span></span></td></tr>
+        </table>
 
+<!--        <input type="radio" name="datasource" value="MBTA" checked="checked" /> MBTA
+        <input type="radio" name="datasource" value="Taxi" /> Taxi -->
+      </div>
 
-        <ul>
-          <li><a href="https://github.com/mrd/LateNightT/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/mrd/LateNightT/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/mrd/LateNightT">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+      <hr class="space"/>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+      <div id="left_side" class="span-16">
+        <div style="margin:0" id="calendar_basic"></div>
+        <div id="chart_div"></div>
+        <div id="explanation">
+          <h3>Question</h3> <p>How have usage patterns of the late
+          night MBTA and Taxi services changed between 2013 and 2014?
+          We can explore this question using the interactive charts on
+          this webpage.</p> <h3>Instructions</h3>
+          <p>
+            These charts show the change between 2013 and 2014, on
+            comparable weekend nights, by looking at the number of
+            transactions. We have data for Feb 28th up to Jun 7th of
+            this year, omitting the third Friday in April because of
+            highly unusual circumstances occurring on Apr 19th, 2013.
+          </p>
+          <ul>
+            <li>At the top is a calendar listing of dates with valid
+            data.<br/>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+              An <span style="color:#ff6c00">orange cell</span> implies heavier usage in 2013.<br/>
+              A <span style="color:#5783e3">blue cell</span> implies heavier usage in 2014.
+            
+            </li>
+            <li>Below that is a chart comparing every 15 minute period from 22:00 at night to 3:00 in the morning.</li>
+            <li>And to the right is a table with a route, station or starting ZIP code breakdown.</li>
+          </ul>
+          <br/>
+          To <strong>narrow your focus</strong>, you can click on:
+          <ul>
+            <li>A day in the calendar above.</li>
+            <li>A bar in the time chart below that.</li>
+            <li>Up to 8 entries in the table to the right. Use SHIFT or CONTROL to select multiple.</li>
+          </ul>
+          <p>
+            Clicking on one chart <strong>will update the other
+            two</strong>, causing them to focus on the desired time
+            and/or place only. For example, you can <a
+            onclick="setParams('2014-05-03',null,[])">look at May 3rd,
+            2014</a> to see that there was an increase of 6,357
+            transactions compared to the previous year.
+          </p>
+          <p>
+            In addition, you can <strong>switch between</strong> MBTA view and Taxi
+            view with the big slider button on the top left of the
+            page, and you can clear filters by clicking the "X" mark
+            next to them on the upper right. You can always reset the
+            charts back to their initial settings by clicking this
+            link: <a onclick="setParams(null, null, [])">reset</a>.
+          </p>
+          <h3>Discussion</h3>
+          <p>
+            <a onclick="setParams(null, null, [])">At first
+            glance</a>, you should be able to see some striking
+            differences in the MBTA dataset, caused by the
+            introduction of late-night service hours. Before the last
+            weekend in March, ridership had been trending slightly
+            downward compared to the previous year. Starting on March
+            28th, there is a sharp increase, as you can see on the
+            calendar, where the dates shift from a light orange color
+            to a distinct blue. The difference can also be viewed on
+            the bar chart that breaks down the 15-minute time
+            periods. The orange bars start to decrease and trail off
+            by 1 a.m., but the blue bars level off and stay stronger
+            until around 2:30 a.m. in the morning. This represents the
+            fact that MBTA usage past 1 a.m. is significantly higher
+            in 2014 compared to 2013, as we expect.
+          </p>
+          <p>
+            Let's take a look at the very first day of late night
+            service, <a
+            onclick="setParams('2014-03-28',null,[])">March
+            28th</a>. This day saw an increase in late night ridership
+            of 6,620 compared to the previous year. You will also see
+            a pattern that recurs frequently, where ridership earlier
+            in the evening declines slightly, but is more than
+            overwhelmed by ridership late at night. This is not due to
+            baseball: it was still spring training in both cases. One
+            hypothesis might be that people are staying out
+            later. Another might be that there is a secular decline in
+            ridership that is being masked by the additional late
+            night service. More analysis is required.
+          </p>
+          <p>
+            Although that particular example didn't show it, you can
+            often see the effects of baseball games at Fenway Park in
+            the data. Check out <a onclick="setParams('2014-04-05',null,['Kenmore Square'])">April 4th focused on Kenmore Square</a>.
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+            The blue bars dominate the time chart, showing massive
+            peaks of ridership from fans leaving the game, over the
+            course of the evening. The difference is that the Red Sox
+            hosted the Brewers on this weekend in 2014, whereas the
+            Sox were in Toronto the previous year. The influx of
+            riders from Fenway Park is so strong that it completely
+            dominates the data when you are focused on Kenmore Square,
+            like in this example. The patterns of colors in the
+            <a onclick="setParams(null,null,['Kenmore Square'])">Kenmore Square-focused calendar</a>
+            are driven by the Sox evening home game schedule.
+          </p>
+          <p>
+            Let's shift back to the late-late night crowd and take a
+            look at how things changed in the 15 minute period
+            beginning <a onclick="setParams(null,'2:00',[])">when the
+            bars close at 2 a.m.</a>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+            Again, it should come as no surprise to see sharp
+            increases in MBTA ridership at 2 a.m. Check out the list
+            of routes and stations that have seen the increases: Park
+            Street has seen over 3,000 new boardings between 2
+            a.m. and 2:15 a.m. in the provided data alone. Where did
+            these riders come from? Presumably, some of them used to
+            take taxis.
+          </p>
+          <p>
+            Let's <a onclick="setParams(null,'2:00',[],taxiDatasource)">flip the switch</a>
+            and take a look at Taxi
+            data for the same 15 minute period of time.
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+            Immediately we can see a lot more orange, meaning that
+            there has been a decline in taxi usage between 2013 and
+            2014. But does this mean that former taxi riders are
+            switching to late night MBTA in droves? Well, not
+            exactly. What we can see is that there seems to be a
+            year-long decline in taxi transactions: even before March
+            28th, taxi usage was going down about as sharply as it
+            does after. In addition, based on the time chart, there
+            seems to be a decline in taxi usage prior to midnight that
+            is just as big, if not more so, as after midnight.
+          </p>
+          <p>
+            Not all areas have seen a decline in taxi usage at 2 a.m. In
+            particular, trips starting in parts of downtown Boston, as
+            well as Dorchester, East Boston and Jamaica Plain/Roxbury
+            <a onclick="setParams(null,'2:00',['02109','02108','02110','02199','02130','02128','02125'],taxiDatasource)">have increased in the past year</a> compared to 2013.
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+            But when comparing those to the starting ZIP codes that <a onclick="setParams(null,'2:00',['02116','02215','02134','02114','02115','02210','02127'],taxiDatasource)">have decreased</a>,
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+            it's not really clear what the difference may be. The
+            decline in late night taxi ridership seems to be occuring
+            primarily in areas served by the Green Line, as well as
+            parts of Cambridge and South Boston. There is a
+            particularly large drop found in 02215
+            (Kenmore/Fenway/BU), 02114 (West End/Bulfinch Triangle)
+            and 02134 (Allston), which happen all to be areas with
+            significant nightlife. On the other hand, the increases in
+            taxi usage are found in places like 02108 (Beacon
+            Hill/DTX) and 02110 (Financial District/Greenway), which
+            are somewhat quieter but still have significant late night
+            activity in some quarters.
+          </p>
+          <p>
+            Enough about taxis and downtown bars. I'm curious about
+            the new late night service hours and their effect on buses
+            in neighborhoods not well-served by rapid transit. I think
+            there was a reasonable worry that the new service hours
+            would be seen and known about mostly in the subway corridors,
+            leaving the bus riders "out in the cold." Let's examine late
+            night ridership of key bus routes
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+            <a onclick="setParams(null,null,['15','22','23','28'])">15, 22, 23 and 28</a>,
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+            which are all important routes branching out southwards
+            from Dudley. Interestingly enough, although late night
+            service officially started on March 28th, it isn't until
+            April 11th that late night ridership on these bus routes
+            started picking up. That might be a result of news
+            traveling more slowly, or perhaps some initial skepticism
+            about the service -- who wants to wait on the corner for a
+            bus that may never come?
+          </p>
+          <p>
+            Perhaps, once the late night service was seen to be a real
+            thing, it started to catch on. Very strongly, it appears,
+            in fact. So strongly, that bus ridership has been boosted
+            at all times between 22:00 at night and 3:00 in the
+            morning. This can be seen, for example, by comparing these buses on
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+            <a onclick="setParams('2014-03-29',null,['15','22','23','28'])">March 29th</a> to
+            <a onclick="setParams('2014-06-07',null,['15','22','23','28'])">June 7th</a>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/mrd">mrd</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+            and see a completely different picture emerge in just two
+            months. On the first weekend of late night service, you
+            see year-over-year declines in ridership compared to
+            2013. Yet, a few weeks later and it's the complete
+            opposite: now there are strong increases in year-over-year
+            ridership compared to 2013, at all hours, not just in the
+            new service hours but also before 1 a.m.
+          </p>
+          <p>
+            I could spend a long time playing with this data. I just
+            want to mention one of the more surprising things I found
+            by accident, which is the curious popularity of the major
+            park-n-ride stations late at night. Ordinarily, you would
+            expect most people who use those stations to be leaving
+            the city at these hours, and not registering as a
+            transaction in the MBTA automated fare collection system. Yet, when you plug in
+
+            <a onclick="setParams(null,null,['Oak Grove', 'Braintree', 'Quincy Adams', 'Riverside', 'Alewife', 'Wonderland'])">Oak Grove, Braintree, Quincy Adams, Riverside, Alewife, Wonderland</a>
+
+            you end up seeing a fairly clear difference before and
+            after March 28th, and strong late night ridership shown in
+            the time chart. My guess is that these riders are either
+            people being dropped off for a late night trip back to the
+            city, or possibly they are very early hours workers taking
+            advantage of the MBTA and the relative emptiness of the
+            park-n-ride lots at this hour.
+          </p>
+          <h3>Conclusion</h3>
+          <p>
+            I won't go on forever, and will leave the rest of the
+            exploring to the reader, for now. Please enjoy clicking
+            around and trying out different settings. One thing I will
+            point out is that all of the machinery behind this can
+            easily be extended with any additional data from the
+            intervening weeks that the MBTA/MassDOT decide to
+            release. This site was created using Google Spreadsheets,
+            Google Charts, GitHub and Javascript.
+          </p>
+        </div>
+      </div>
+      <div id="table_container" class="span-8 last">
+        <div id="table_div"></div>
+        <div id="summary_div"></div>
+        <div id="map_canvas"></div>
+      </div>
+      <hr class="space"/>
+      <div class="span-16 last" id="discussion">
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
   </body>
 </html>
