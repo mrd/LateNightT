@@ -14,18 +14,16 @@
       a, a:visited, a:active { text-decoration: none; border-bottom: 1px dotted blue; }
       a:hover { text-decoration: underline; border: none }
       body { padding: 1em; text-align: justify }
-      //#clearbuttons button { display: none }
+
       button.clearbutton { display: none }
-      //ul#clearbuttons { list-style-type: none; margin: 0; padding: 0; }
-      //ul#clearbuttons li { display: inline }
-      #explanation { overflow: scroll; height: 400px; padding: 2em }
+      #explanation { overflow: scroll; height: 430px; padding: 2em; margin-top: -30px }
       #explanation ul { margin: 0; padding: 0; }
       #discussion h3, #explanation h3 { color: #999999; font-size: 10pt; family:Trebuchet, Arial, sans-serif; font-weight: bold; }
 
       table#display, table#display tr, table#display tr td { margin: 0; padding: 0; }
 
       div#calendar_basic { width: 600px; height: 200px; }
-      div#chart_div { width: 650px; height: 400px; margin: 0; padding: 0 }
+      div#chart_div { width: 650px; height: 400px; margin: 0; padding: 0; top: -30px }
       div#table_div { width: 400px; height: auto; }
       div#summary_div { width: 400px; height: 3em; }
       div#summary_div span.v { text-align: right; padding: 0; margin: 0 }
@@ -71,9 +69,6 @@
         <td><button class="clearbutton" id="clear15m">X</button></td><td id="time_display"><span></span></td>
         <td><button class="clearbutton" id="clearrs">X</button></td><td id="station_display"><span></span></td></tr>
         </table>
-
-<!--        <input type="radio" name="datasource" value="MBTA" checked="checked" /> MBTA
-        <input type="radio" name="datasource" value="Taxi" /> Taxi -->
       </div>
 
       <hr class="space"/>
@@ -257,13 +252,13 @@
             <a onclick="setParams('2014-03-29',null,['15','22','23','28'])">March 29th</a> to
             <a onclick="setParams('2014-06-07',null,['15','22','23','28'])">June 7th</a>
 
-            and see a completely different picture emerge in just two
+            and having a completely different picture emerge in just two
             months. On the first weekend of late night service, you
             see year-over-year declines in ridership compared to
             2013. Yet, a few weeks later and it's the complete
             opposite: now there are strong increases in year-over-year
-            ridership compared to 2013, at all hours, not just in the
-            new service hours but also before 1 a.m.
+            ridership compared to 2013. At all hours: not just in the
+            new service hours, but also before 1 a.m.
           </p>
           <p>
             I could spend a long time playing with this data. I just
@@ -291,7 +286,7 @@
             around and trying out different settings. One thing I will
             point out is that all of the machinery behind this can
             easily be extended with any additional data from the
-            intervening weeks that the MBTA/MassDOT decide to
+            intervening weeks that the MBTA/MassDOT decides to
             release. This site was created using Google Spreadsheets,
             Google Charts, GitHub and Javascript.
           </p>
