@@ -267,10 +267,15 @@ function handle15MQueryResponse(response) {
     var ddisplay14 = formatDay(dayParam);
     var ddisplay13 = formatDay(yty[moment(dayParam).format("YYYY-MM-DD")]);
     options['title'] = ddisplay13 + ' vs ' + ddisplay14 + ': ' + options['title'];
-    if(rsParam.length == 0)
-      options['vAxis']['maxValue'] = 10000; // prevent axes from moving around too much and fooling end user
-    else
-      options['vAxis']['maxValue'] = 1000 + (rsParam.length - 1) * 500;
+
+    if(false) {
+      // prevent axes from moving around too much and fooling end user
+      if(rsParam.length == 0)
+        options['vAxis']['maxValue'] = 10000;
+      else
+        options['vAxis']['maxValue'] = 1000 + (rsParam.length - 1) * 500;
+      if(isTaxiSource()) options['vAxis']['maxValue'] *= 0.25;
+    }
   }
 
 
